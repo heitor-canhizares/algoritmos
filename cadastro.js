@@ -27,7 +27,6 @@ const cadastraPessoa = () => {
 
     console.log("Dados salvos com sucesso!");
 };
-
 const cadastraProduto = () => {
     const listaProduto = JSON.parse(fs.readFileSync("Produtos.json"));
     const produto = { ID: crypto.randomUUID() };

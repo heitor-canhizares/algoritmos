@@ -1,8 +1,10 @@
 const fs = require("fs");
 const prompt = require("prompt-sync")();
 const crypto = require("crypto");
-let opcaoSelecionada = null;
+const { PrismaClient } = require("@prisma/client");
+const db = new PrismaClient();
 
+let opcaoSelecionada = null;
 // Funções do Sistema
 const menuPrincipal = () => {
     console.clear();
@@ -10,9 +12,8 @@ const menuPrincipal = () => {
     opcaoSelecionada = prompt();
 };
 
-const cadastraPessoa = () => {
-    const listaPessoa = JSON.parse(fs.readFileSync("Pessoas.json"));
-    const pessoa = { ID: crypto.randomUUID() };
+const cadastraPessoa = async () => {
+    const pessoa = {};
 
     console.log("Iniciando um novo cadastro...");
     pessoa.nome = prompt("Nome completo: ");
@@ -21,27 +22,20 @@ const cadastraPessoa = () => {
     pessoa.email = prompt("Email: ");
     pessoa.telefone = prompt("Telefone: ");
 
-    listaPessoa.push(pessoa);
-
-    fs.writeFileSync("Pessoas.json", JSON.stringify(listaPessoa));
+    let result = await db.pessoa.create({ data: pessoa });
 
     console.log("Dados salvos com sucesso!");
 };
-const cadastraProduto = () => {
-    const listaProduto = JSON.parse(fs.readFileSync("Produtos.json"));
-    const produto = { ID: crypto.randomUUID() };
+const cadastraProduto = async () => {
+    const produto = {};
 
     console.log("Iniciando um novo cadastro de produto...");
     produto.nome = prompt("Nome: ");
     produto.descricao = prompt("Descrição: ");
     produto.marca = prompt("Marca: ");
-    produto.valor = prompt("Valor em reais: ");
+    produto.valorUnitario = prompt("Valor em reais: ");
 
-    listaProduto.push(produto);
-
-    fs.writeFileSync("Produtos.json", JSON.stringify(listaProduto));
-
-    console.log("Produto salvo com sucesso!");
+    let result = await db.produto.create({ data: produto });
 };
 
 //Telas do Sistema
@@ -52,15 +46,18 @@ Selecione uma opção
 2 - Cadastrar um Produto;
 0 - Sair;`;
 
-//Sistema
-while (opcaoSelecionada != 0) {
-    menuPrincipal();
-    switch (opcaoSelecionada) {
-        case "1":
-            console.clear();
-            cadastraPessoa();
-        case "2":
-            console.clear();
-            cadastraProduto();
+const inicio = async () => {
+    while (opcaoSelecionada != 0) {
+        menuPrincipal();
+        switch (opcaoSelecionada) {
+            case "1":
+                console.clear();
+                await cadastraPessoa();
+            case "2":
+                console.clear();
+                await cadastraProduto();
+        }
     }
-}
+};
+//Sistema
+inicio();

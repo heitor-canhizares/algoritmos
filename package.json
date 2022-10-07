@@ -1,15 +1,20 @@
 {
   "dependencies": {
+    "@prisma/client": "^4.4.0",
+    "dotenv": "^16.0.3",
+    "mysql2": "^2.3.3",
     "prompt-sync": "^4.2.0"
   },
   "name": "algoritmos",
   "version": "1.0.0",
   "description": "Aula",
   "main": "atividades.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "prisma": "^4.4.0"
+  }
 }
